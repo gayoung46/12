@@ -22,6 +22,7 @@ int player_status[N_PLAYER];
 char player_statusString[3][MAXLENGTH] = {"LIVE", "DIE", "END"};
 
 
+
 void printPlayerPosition(int player)
 {
      int i;
@@ -95,6 +96,38 @@ int gameEnd(void)
     
 }
 
+int getAlivePlayer(void)
+{
+    int i;
+    int cnt = 0;
+    
+    for(i=0;i<N_PLAYER;i++)
+    {
+         if (player_status[i] == PLAYERSTATUS_END)
+             cnt ++;
+    }
+    
+    return cnt;
+}
+
+
+int getWinner(void)
+{
+    int i;
+    int winner =0;
+    int max_coin = -1;
+    
+    for(i=0;i<N_PLAYER;i++)
+    {
+         if(player_coin[i] > max_coin)
+         {
+              max_coin = player_coin[i];
+              winner = i;
+         }
+    }
+    
+    return winner;
+}
 
 
 void checkDie(void)
@@ -122,7 +155,8 @@ int main(int argc, char *argv[])
     int turn;
     int coinResult = 0 ;
     int dum;
-    
+    int i;
+    int alive, winner;
     
     srand((unsigned)(time(NULL)));
     
@@ -202,7 +236,20 @@ int main(int argc, char *argv[])
     printf("=============================================\n");
     printf("                   GAME END                  \n");
     printf("=============================================\n");
-  
+    
+    
+    for(i=0;i<N_PLAYER;i++)
+    {
+         printf("%s : %d coins\n", player_name[i], player_coin[i]);
+    }
+    
+    alive = getAlivePlayer();
+    winner = getWinner();
+    
+    printf("\nAlive players : %d\n", alive);
+    printf("Winner is player %d (%s) with %d coins!\n\n", winner, player_name[winner], player_coin[winner]);
+    
+    
   system("PAUSE");	
   return 0;
 }
